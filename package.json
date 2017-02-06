@@ -1,7 +1,8 @@
 {
-  "name": "css-mqpacker-sort",
+  "name": "compare-media-queries",
   "version": "0.0.1",
   "description": "Opinionated sorting function for mqpacker",
+  "repository": "cirmaciu/compare-media-queries",
   "main": "index.js",
   "scripts": {
     "test": "mocha"
