@@ -1,4 +1,4 @@
-var mediaQuery = require('css-mediaquery');
+const mediaQuery = require('css-mediaquery');
 
 const defaultWeights = {
     types: {
@@ -21,7 +21,7 @@ const defaultWeights = {
     }
 }
 
-const defaultCoefs = {
+const defaultUnits = {
     ch: 8.8984375,
     em: 16, 
     rem: 16,
@@ -46,10 +46,10 @@ function getWeight(data, weights) {
 }
 
 
-function inspectLength(length, coefs) {
+function convertValue(length, units) {
     var num;
     var unit;
-    length = new RegExp(`(-?\\d*\\.?\\d+)(${Object.keys(coefs).join('|')})`).exec(length);
+    length = new RegExp(`(-?\\d*\\.?\\d+)(${Object.keys(units).join('|')})`).exec(length);
 
     if (!length) {
         return Number.MAX_VALUE;
@@ -58,8 +58,8 @@ function inspectLength(length, coefs) {
     num = length[1];
     unit = length[2];
 
-    if (unit in coefs) {
-        num = parseFloat(num) * coefs[unit];
+    if (unit in units) {
+        num = parseFloat(num) * units[unit];
     }
 
     return num;
@@ -67,7 +67,7 @@ function inspectLength(length, coefs) {
 
 function compare(a, b, options = {}) {
     const weights = Object.assign({}, defaultWeights, 'weights' in options ? option.weights : {});
-    const coefs = Object.assign({}, defaultCoefs, 'units' in options ? options.units : {});
+    const units = Object.assign({}, defaultUnits, 'units' in options ? options.units : {});
 
     let mqA = mediaQuery.parse(a)[0];
     let mqB = mediaQuery.parse(b)[0];
@@ -90,12 +90,12 @@ function compare(a, b, options = {}) {
     }
 
     if (expressionA) {
-        expressionA.value = inspectLength(expressionA.value, coefs);
+        expressionA.value = convertValue(expressionA.value, units);
         Object.assign(sortA, expressionA);
     }
 
     if (expressionB) {
-        expressionB.value = inspectLength(expressionB.value, coefs);
+        expressionB.value = convertValue(expressionB.value, units);
         Object.assign(sortB, expressionB);
     }
 

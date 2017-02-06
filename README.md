@@ -1,10 +1,17 @@
 # compare-media-queries
 Opinionated sorting function. Originaly made to be used in mqpacker sort function.
 
-This function evaluates only first rule of first media query. It can't compare queries with several conditions or multiple queries separated by comma yet.
+*This function evaluates only first rule of first media query.* It can't compare queries with several conditions or multiple queries separated by comma yet.
 
-## Syntax
-`compare(a, b, options);`
+**Warning:** You have to take into account that sorting media queries in CSS can produce unintended results.
+
+## Usage
+```
+import compare from 'compare-media-queries';
+
+compare(a, b, options);
+```
+Returns numbers as required by `Array.prototype.sort()`.
 
 ### Parameters
 | Parameter  | Type    | Description                              |
@@ -21,7 +28,7 @@ Object containing weights for different parts of media query. You can efectively
 
 Defaults:
 ```
-{
+const defaultWeights = {
     types: {
         all: 1000,
         screen: 2000,
@@ -46,13 +53,13 @@ Defaults:
 `unknown` is used for every unknown rule
 
 #### `units`
-`units` are used for value evaluation. For example `10px` will became `10`, `10em` will became `160` etc.
+`units` are used for value conversion. For example `10px` will became `10`, `10em` will became `160` etc.
 
 You can provide rules for unknown units.
 
 Defaults:
 ```
-{
+const defaultUnits = {
     ch: 8.8984375,
     em: 16, 
     rem: 16,
@@ -64,7 +71,7 @@ Defaults:
 ```
 
 ## Rules
-Function calculates specifity for media query using predefined weights.
+Default weights are for mobile-first sorting.
 - Media types (in this order): `all`, `screen`, `print`, other types
 - Modifiers: `min`, `max`
 - Features: `width`, `height`, `resolution`, other
@@ -72,4 +79,4 @@ Function calculates specifity for media query using predefined weights.
 If specifity is same for both queries, values are compared.
 
 ## Future
-- evaluate multiple conditions in query
+- sort by multiple conditions in query
