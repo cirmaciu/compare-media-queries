@@ -12,13 +12,13 @@ describe('Media Query Sort', function() {
             assert.equal(0, compare(typeEmpty, typeAll));
         });
         it('all < screen', function() {
-            assert.equal(true, compare(typeAll, typeScreen) < 0);
+            assert(compare(typeAll, typeScreen) < 0);
         });
         it('screen < print', function() {
-            assert.equal(true, compare(typeScreen, typePrint) < 0);
+            assert(compare(typeScreen, typePrint) < 0);
         });
         it('all < print', function() {
-            assert.equal(true, compare(typeAll, typePrint) < 0);
+            assert(compare(typeAll, typePrint) < 0);
         });
     });
     
@@ -28,15 +28,15 @@ describe('Media Query Sort', function() {
         const orientation = '(orientation: landscape)';
 
         it('min < max', function() {
-            assert.equal(true, compare(minWidth, maxWidth) < 0);
+            assert(compare(minWidth, maxWidth) < 0);
         });
 
         it('undefined modifier > min', function() {
-            assert.equal(true, compare(orientation, minWidth) > 0);
+            assert(compare(orientation, minWidth) > 0);
         });
 
         it('undefined modifier > max', function() {
-            assert.equal(true, compare(orientation, maxWidth) > 0);
+            assert(compare(orientation, maxWidth) > 0);
         });
     });
 
@@ -47,19 +47,19 @@ describe('Media Query Sort', function() {
         const maxHeight = '(max-height: 30em)';[]
 
         it('min-width < min-height', function() {
-            assert.equal(true, compare(minWidth, minHeight) < 0);
+            assert(compare(minWidth, minHeight) < 0);
         });
 
         it('min-width < max-height', function() {
-            assert.equal(true, compare(minWidth, maxHeight) < 0);
+            assert(compare(minWidth, maxHeight) < 0);
         });
 
         it('min-height < max-width', function() {
-            assert.equal(true, compare(minHeight, maxWidth) < 0);
+            assert(compare(minHeight, maxWidth) < 0);
         });
 
         it('max-width < max-height', function() {
-            assert.equal(true, compare(maxWidth, maxHeight) < 0);
+            assert(compare(maxWidth, maxHeight) < 0);
         });
     });
 
@@ -69,7 +69,7 @@ describe('Media Query Sort', function() {
         const rem30 = '(min-width: 30em)';
 
         it('20em < 30em', function() {
-            assert.equal(true, compare(em20, em30) < 0);
+            assert(compare(em20, em30) < 0);
         });
 
         it('30em = 30rem', function() {
@@ -89,35 +89,48 @@ describe('Media Query Sort', function() {
         const miDeviceWidth = '(min-device-width: 42mm)';
 
         it(`${first} < ${second}`, function() {
-            assert.equal(true, compare(first, second) < 0);
+            assert(compare(first, second) < 0);
         });
 
         it(`${fourth} < ${first}`, function() {
-            assert.equal(true, compare(fourth, first) < 0);
+            assert(compare(fourth, first) < 0);
         });
 
         it(`${second} < ${third}`, function() {
-            assert.equal(true, compare(second, third) < 0);
+            assert(compare(second, third) < 0);
         });
 
         it(`${fifth} < ${first}`, function() {
-            assert.equal(true, compare(fifth, first) < 0);
+            assert(compare(fifth, first) < 0);
         });
 
         it(`${sixth} < ${fifth}`, function() {
-            assert.equal(true, compare(sixth, fifth) < 0);
+            assert(compare(sixth, fifth) < 0);
         });
 
         it(`${retina} < ${first}`, function() {
-            assert.equal(true, compare(retina, first) < 0);
+            assert(compare(retina, first) < 0);
         });
 
         it(`${firstBare} < ${retina}`, function() {
-            assert.equal(true, compare(firstBare, retina) < 0);
+            assert(compare(firstBare, retina) < 0);
         });
 
         it(`${firstBare} < ${miDeviceWidth}`, function() {
-            assert.equal(true, compare(firstBare, miDeviceWidth) < 0);
+            assert(compare(firstBare, miDeviceWidth) < 0);
         });
     });
+
+    // describe('Multiple conditions', function() {
+    //     const maxWidth40 = 'screen and (min-width: 20em) and (max-width: 40em)';
+    //     const maxWidth30 = 'screen and (min-width: 20em) and (max-width: 30em)';
+    //     const maxHeight40 = 'screen and (min-width: 20em) and (max-height: 40em)';
+    //     const maxHeight30 = 'screen and (min-width: 20em) and (max-height: 30em)';
+    //     const minHeight20 = 'screen and (min-width: 20em) and (min-height: 20em)';
+    //     const minHeight30 = 'screen and (min-width: 20em) and (min-height: 30em)';
+
+    //     it(`${maxWidth40} < ${maxWidth30}`, function() {
+    //         assert(compare(maxWidth40, maxWidth30) < 0);
+    //     })
+    // });
 });
