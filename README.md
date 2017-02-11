@@ -27,7 +27,7 @@ Function uses two objects to evaluate weight of media query.
 Object containing weights for different parts of media query. You can efectively change sorting rules by providing different weights.
 
 Defaults:
-```
+```javascript
 const defaultWeights = {
     types: {
         all: 1000,
@@ -58,7 +58,7 @@ const defaultWeights = {
 You can provide rules for unknown units.
 
 Defaults:
-```
+```javascript
 const defaultUnits = {
     ch: 8.8984375,
     em: 16, 
@@ -75,8 +75,9 @@ Default weights are for mobile-first sorting.
 - Media types (in this order): `all`, `screen`, `print`, other types
 - Modifiers: `min`, `max`
 - Features: `width`, `height`, `resolution`, other
+- Values: ascending order
 
-If specifity is same for both queries, values are compared.
+If specifity is same for both queries, values are compared. If modifier `max` is used, values are sorted in descending order.
 
 ## Future
 - sort by multiple conditions in query
