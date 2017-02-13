@@ -52,7 +52,7 @@ function convertValue(length, units) {
     length = new RegExp(`(-?\\d*\\.?\\d+)(${Object.keys(units).join('|')})`).exec(length);
 
     if (!length) {
-        return Number.MAX_VALUE;
+        return Number.MAX_SAFE_INTEGER;
     }
 
     num = length[1];
@@ -72,46 +72,75 @@ function compare(a, b, options = {}) {
     let mqA = mediaQuery.parse(a)[0];
     let mqB = mediaQuery.parse(b)[0];
 
-    let expressionA = mqA.expressions[0];
-    let expressionB = mqB.expressions[0];
-
-    let sortA = {
-        type: mqA.type,
-        modifier: null,
-        feature: null,
-        value: 0
+    // just type defined
+    if (mqA.expressions.length === 0) {
+        mqA.expressions.push({
+            type: mqA.type,
+            modifier: null,
+            feature: null,
+            value: 0
+        });
     }
 
-    let sortB = {
-        type: mqB.type,
-        modifier: null,
-        feature: null,
-        value: 0
+    if (mqB.expressions.length === 0) {
+        mqB.expressions.push({
+            type: mqB.type,
+            modifier: null,
+            feature: null,
+            value: 0
+        });
     }
 
-    if (expressionA) {
-        expressionA.value = convertValue(expressionA.value, units);
-        Object.assign(sortA, expressionA);
-    }
+    mqA.expressions.forEach(expression => {
+        expression.type = mqA.type;
+        expression.value = convertValue(expression.value, units);
+        expression.weight = getWeight(expression, weights);
+    });
 
-    if (expressionB) {
-        expressionB.value = convertValue(expressionB.value, units);
-        Object.assign(sortB, expressionB);
-    }
+    mqB.expressions.forEach(expression => {
+        expression.type = mqB.type;
+        expression.value = convertValue(expression.value, units);
+        expression.weight = getWeight(expression, weights);
+    });
 
-    // calculate weights
-    const weightA = getWeight(sortA, weights);
-    const weightB = getWeight(sortB, weights);
+    let i = 0;
+    const last = Math.max(mqA.expressions.length, mqB.expressions.length) - 1;
 
-    if (weightA === weightB) {
-        if (sortA.modifier === 'max') {
-            return sortB.value - sortA.value;
-        } else {
-            return sortA.value - sortB.value;
+    while (i <= last) {
+        const expA = mqA.expressions[i] || null;
+        const expB = mqB.expressions[i] || null;
+
+        // different lengths
+        if (!expA || !expB) {
+            return mqA.expressions.length - mqB.expressions.length;
         }
-    }
+        
+        // different weights, terminate immediatly
+        if (expA.weight !== expB.weight) {
+            return expA.weight - expB.weight;
+        }
 
-    return weightA - weightB;
+        // not last index, same conditions different values
+        // move to next index if values are equal
+        if (i !== last && expA.weight === expB.weight && expA.value !== expB.value) {
+            if (expA.modifier === 'max') {
+                return expB.value - expA.value;
+            } else {
+                return expA.value - expB.value;
+            }
+        }
+
+        // last index, value evaluation
+        if (i === last && expA.weight === expB.weight) {
+            if (expA.modifier === 'max') {
+                return expB.value  - expA.value;
+            } else {
+                return expA.value - expB.value;
+            }
+        }
+
+        i++;
+    }
 }
 
 module.exports = compare;

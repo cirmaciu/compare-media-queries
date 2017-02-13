@@ -66,14 +66,20 @@ describe('Media Query Sort', function() {
         const em20 = '(min-width: 20em)';
         const em30 = '(min-width: 30em)';
         const rem30 = '(min-width: 30em)';
+        const maxEm20 = '(max-width: 20em)';
+        const maxEm30 = '(max-width: 30em)';
 
-        it('20em < 30em', function() {
+        it('20em < 30em for other than max modifier', function() {
             expect(compare(em20, em30)).toBeLessThan(0);
         });
 
         it('30em = 30rem', function() {
             expect(compare(em30, rem30)).toBe(0);
-        })
+        });
+
+        it('20em > 30em for max modifier', function() {
+            expect(compare(maxEm20, maxEm30)).toBeGreaterThan(0);
+        });
     });
 
     describe('Combined features', function() {
@@ -120,7 +126,8 @@ describe('Media Query Sort', function() {
         });
     });
 
-    describe('Multiple conditions', function() {
+    describe('Multiple conditions of same type', function() {
+        const minWidth20 = 'screen and (min-width: 20em)';
         const maxWidth40 = 'screen and (min-width: 20em) and (max-width: 40em)';
         const maxWidth30 = 'screen and (min-width: 20em) and (max-width: 30em)';
         const maxHeight40 = 'screen and (min-width: 20em) and (max-height: 40em)';
@@ -128,8 +135,12 @@ describe('Media Query Sort', function() {
         const minHeight20 = 'screen and (min-width: 20em) and (min-height: 20em)';
         const minHeight30 = 'screen and (min-width: 20em) and (min-height: 30em)';
 
-        it(`${maxWidth40} < ${maxWidth30}`, function() {
-            expect(compare(maxWidth40, maxWidth30)).toBeLessThan(0);
-        })
+        it('one condition should preceed two conditions if first condition is same', function() {
+            expect(compare(minWidth20, maxWidth30)).toBeLessThan(0);
+        });
+        
+        it('should compare by first different condition found', function() {
+            expect(compare(minHeight20, minHeight30)).toBeLessThan(0);
+        });
     });
 });

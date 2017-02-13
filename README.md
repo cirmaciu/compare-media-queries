@@ -1,7 +1,7 @@
 # compare-media-queries
 Opinionated sorting function. Originaly made to be used in mqpacker sort function.
 
-*This function evaluates only first rule of first media query.* It can't compare queries with several conditions or multiple queries separated by comma yet.
+*This function evaluates only first media query.* It can't compare additional queries separated by comma.
 
 **Warning:** You have to take into account that sorting media queries in CSS can produce unintended results.
 
@@ -16,8 +16,8 @@ Returns numbers as required by `Array.prototype.sort()`.
 ### Parameters
 | Parameter  | Type    | Description                              |
 | ---------- | ------- | ---------------------------------------- |
-| `a`        | string  | First media query                        |
-| `b`        | string  | Second media query                       |
+| `a`        | string  | *required* First media query             |
+| `b`        | string  | *required* Second media query            |
 | `options`  | object  | Options                                  |
 
 ### Options
@@ -71,13 +71,10 @@ const defaultUnits = {
 ```
 
 ## Rules
-Default weights are for mobile-first sorting.
-- Media types (in this order): `all`, `screen`, `print`, other types
+Default weights are for mobile-first sorting and are calculated based on following order
+- Media types: `all` | `unspecified`, `screen`, `print`, other types
 - Modifiers: `min`, `max`
 - Features: `width`, `height`, `resolution`, other
 - Values: ascending order
 
 If specifity is same for both queries, values are compared. If modifier `max` is used, values are sorted in descending order.
-
-## Future
-- sort by multiple conditions in query
