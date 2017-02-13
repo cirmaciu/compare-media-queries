@@ -6,7 +6,7 @@ Opinionated sorting function. Originaly made to be used in mqpacker sort functio
 **Warning:** You have to take into account that sorting media queries in CSS can produce unintended results.
 
 ## Usage
-```
+```javascript
 import compare from 'compare-media-queries';
 
 compare(a, b, options);
